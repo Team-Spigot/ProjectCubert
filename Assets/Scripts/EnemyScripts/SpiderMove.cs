@@ -33,6 +33,7 @@ public class SpiderMove : MonoBehaviour
 
     public Directions Direction;
 
+
     public InitalDirections InitalDirection;
 
     private Vector2 velocity;
@@ -46,10 +47,14 @@ public class SpiderMove : MonoBehaviour
     private bool hitwallsideleft;
 
     private Vector3 startingPosition;
+    private Directions startingDirection;
+    private Quaternion startingRotation;
 
     void Awake()
     {
         startingPosition = transform.position;
+        startingDirection = Direction;
+        startingRotation = transform.rotation;
     }
 
     void Start()
@@ -375,5 +380,8 @@ public class SpiderMove : MonoBehaviour
     public void Reset()
     {
         transform.position = startingPosition;
+        Direction = startingDirection;
+        transform.rotation = startingRotation;
+        Start();
     }
 }

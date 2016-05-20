@@ -21,20 +21,14 @@ public class CubertHealth : MonoBehaviour
 
     }
 
-    void OnCollisionEnter2D(Collision2D col)
-    {
-        if (col.gameObject.tag == ("Enemy"))
-        {
-            StartCoroutine(WaitDeath(0));
-        }
-    }
-
-    IEnumerator WaitDeath(float seconds)
+    IEnumerator WaitDeath()
     {
         FindObjectOfType<Fade>().FadeToLevel(-1);
         transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 5);
         GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+        Debug.Log("FROZE PLAYER");
         yield return new WaitForSeconds(FindObjectOfType<Fade>().FadeTime);
+        Debug.Log("WAIT OVER");
         foreach (GameObject go in GameObject.FindGameObjectsWithTag("Enemy"))
         {
             if (go.GetComponent<SpiderMove>() != null)
@@ -42,10 +36,25 @@ public class CubertHealth : MonoBehaviour
                 go.GetComponent<SpiderMove>().Reset();
             }
         }
+        foreach (GameObject go in GameObject.FindGameObjectsWithTag("FlimsyWall"))
+        {
+            if (go.GetComponent<FlimsyWallReset>() != null)
+            {
+                go.GetComponent<FlimsyWallReset>().Reset();
+            }
+        }
+        foreach (GameObject go in GameObject.FindGameObjectsWithTag("Spicer"))
+        {
+            if (go.GetComponent<FlimsyWallReset>() != null)
+            {
+                go.GetComponent<FlimsyWallReset>().Reset();
+            }
+        }
         GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+        Debug.Log("UNFROZE PLAYER");
         if (LastCheckPoint != null)
         {
-            PlayerOrigin.transform.position = LastCheckPoint.transform.position;
+            PlayerOrigin.transform.position = new Vector3(LastCheckPoint.transform.position.x, LastCheckPoint.transform.position.y, 0);
             transform.localPosition = Vector3.zero;
         }
         else
@@ -57,6 +66,14 @@ public class CubertHealth : MonoBehaviour
     void OnLevelWasLoaded()
     {
         gameObject.transform.localPosition = (Vector3)Vector2.zero;
+    }
+
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.gameObject.tag == ("Enemy"))
+        {
+            StartCoroutine(WaitDeath());
+        }
     }
 
     void OnTriggerEnter2D(Collider2D col)
@@ -76,11 +93,13 @@ public class CubertHealth : MonoBehaviour
         }
         if (col.gameObject.tag == ("Enemy"))
         {
-            StartCoroutine(WaitDeath(10));
-            gameObject.SetActive(false);
-            FindObjectOfType<Fade>().FadeToLevel(-1);
-            gameObject.SetActive(true);
-            transform.localPosition = new Vector3(0, 0, 0);
+            StartCoroutine(WaitDeath());
         }
+    }
+
+    void OnParticleCollision(GameObject other)
+    {
+        StartCoroutine(WaitDeath());
+        Debug.Log("PARTICLE COLLISION");
     }
 }

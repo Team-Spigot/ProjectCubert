@@ -209,11 +209,22 @@ public class CubertController : MonoBehaviour
             jmpForce = JumpForce;
 
 
-           /* foreach (ContactPoint2D c in col.contacts)
-            {
-                tempHinge = col.gameObject.AddComponent<HingeJoint2D>();
-                tempHinge.connectedBody = gameObject.GetComponent<Rigidbody2D>();
-            }*/
+            /* foreach (ContactPoint2D c in col.contacts)
+             {
+                 tempHinge = col.gameObject.AddComponent<HingeJoint2D>();
+                 tempHinge.connectedBody = gameObject.GetComponent<Rigidbody2D>();
+             }*/
+
+            //Debug.Log("OnGround");
+        }
+        if (col.collider.tag == "BounceWall")
+        {
+            onGround = true;
+            JumpKey = false;
+            jmpDuration = 0;
+            jmpForce = JumpForce;
+
+            stickyWall = false;
 
             //Debug.Log("OnGround");
         }
@@ -256,6 +267,17 @@ public class CubertController : MonoBehaviour
 
             //Debug.Log("OnGround");
         }
+        if (col.collider.tag == "BounceWall")
+        {
+            onGround = true;
+            JumpKey = false;
+            jmpDuration = 0;
+            jmpForce = JumpForce;
+
+            stickyWall = false;
+
+            //Debug.Log("OnGround");
+        }
     }
 
     void OnCollisionExit2D(Collision2D col)
@@ -288,6 +310,17 @@ public class CubertController : MonoBehaviour
         {
             onGround = false;
             JumpKey = true;
+            jmpDuration = 0;
+            jmpForce = JumpForce;
+
+            stickyWall = false;
+
+            //Debug.Log("OnGround");
+        }
+        if (col.collider.tag == "BounceWall")
+        {
+            onGround = true;
+            JumpKey = false;
             jmpDuration = 0;
             jmpForce = JumpForce;
 
